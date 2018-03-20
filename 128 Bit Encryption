@@ -26,7 +26,8 @@ void setup() {
          Serial.print(Trans);           // data sent for transmission
 };
 
-void Decryption(){
+void Decryption()
+   {
         
         if (Serial.available()>0){ // checking for data
         Serial.readBytes(Rec,16);   // reading data into an array
