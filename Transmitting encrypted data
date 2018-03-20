@@ -1,0 +1,87 @@
+#include <VirtualWire.h>
+#include <AESLib.h>
+uint8_t key[] = {0,1,2,3,4,5,6,7,8,9,13,11,1,13,14,5};
+char Trans[16];
+String Data;
+uint8_t buf[16];
+uint8_t rec[16];
+
+void Encryption(int SensorData, int TimeStamp, unsigned long Hop)
+    {
+
+         Data=String(SensorData);
+         Data.concat(TimeStamp);
+         Data.concat(Hop);
+         Data.toCharArray(Trans,16);
+         
+         aes128_enc_single(key, Trans);  //encrypted
+         vw_send((uint8_t *)Trans, strlen(Trans));
+         vw_wait_tx(); // Wait until the whole message is gone
+         digitalWrite(13,1);
+         
+    };
+
+void Decryption()
+    {
+        
+        uint8_t buflen = 16;
+        if (vw_get_message(buf, &buflen)) // Non-blocking
+              {
+                  aes128_dec_single(key,buf); //decryption
+                  digitalWrite(13,1);
+        
+                  for(int i=0;i<16;i++)
+                  rec[i]=buf[i];
+         
+                  for(int i=0;i<16;i++)
+                    {
+
+                          if(rec[i]==57)
+                          Serial.print("9");
+                          else if(rec[i]==56)
+                          Serial.print("8");
+                          else if(rec[i]==55)
+                          Serial.print("7");
+                          else if(rec[i]==54)
+                          Serial.print("6");
+                          else if(rec[i]==53)
+                          Serial.print("5");
+                          else if(rec[i]==52)
+                          Serial.print("4");
+                          else if(rec[i]==51)
+                          Serial.print("3");
+                          else if(rec[i]==50)
+                          Serial.print("2");
+                          else if(rec[i]==49)
+                          Serial.print("1");
+                          else if(rec[i]==48)
+                          Serial.print("0");
+                     }
+                          Serial.println("");
+                }   
+    };
+
+
+
+void setup() {
+pinMode(13,OUTPUT);
+vw_set_ptt_inverted(true);
+vw_set_tx_pin(12);
+vw_set_rx_pin(11);
+vw_setup(2000);// speed of data transfer Kbps
+Serial.begin(9600);
+             }
+
+
+
+void loop(){
+
+ int SensorData = 11111; //999.99 ppm #variable
+ int TimeStamp = 1210; // 12:10 pm (24 hour format) #variable
+ unsigned long Hop = 9999999; // for checking transmission
+
+ Decryption();
+ Encryption(SensorData,TimeStamp,Hop);
+ delay(2000);
+
+}
