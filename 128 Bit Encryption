@@ -1,0 +1,53 @@
+
+//------------------------------------------------------------------Encryption and Decryption Included------------------------------------------------------------------
+//-------------------------------------------------------------------------------PunEat-----------------------------------------------------------------------------------
+
+
+#include <AESLib.h>
+uint8_t key[] = {0,1,2,3,4,5,6,7,8,9,13,11,1,13,14,5};
+char Trans[16], Rec[16];
+String Data;
+
+        
+void setup() {
+ Serial.begin(4800);
+ //pinMode(8,);
+}
+
+
+ void Encryption(int SensorData, int TimeStamp, unsigned long Hop){
+
+         Data=String(SensorData);
+         Data.concat(TimeStamp);
+         Data.concat(Hop);
+         Data.toCharArray(Trans,16);
+         
+         aes128_enc_single(key, Trans);  //encrypted
+         Serial.print(Trans);           // data sent for transmission
+};
+
+void Decryption(){
+        
+        if (Serial.available()>0){ // checking for data
+        Serial.readBytes(Rec,16);   // reading data into an array
+        aes128_dec_single(key,Rec); //decrypted
+        Serial.print(Rec);  //  printing decrypted
+   }
+
+   else {Serial.print("no");}
+};
+
+
+
+void loop() {
+
+ int SensorData = 99999; //999.99 ppm #variable
+ int TimeStamp = 1210; // 12:10 pm (24 hour format) #variable
+ unsigned long Hop = 9999999; // for checking transmission
+
+         
+ //Encryption(SensorData,TimeStamp,Hop);
+       delay(2000);
+ Decryption();
+
+}
