@@ -6,7 +6,7 @@ String Data;
 uint8_t buf[16];
 uint8_t rec[16];
 
-void Encryption(int SensorData, int TimeStamp, unsigned long Hop)
+void Encryption(unsigned long SensorData, int TimeStamp, String Hop)
     {
 
          Data=String(SensorData);
@@ -76,9 +76,9 @@ Serial.begin(9600);
 
 void loop(){
 
- int SensorData = 11111; //999.99 ppm #variable
+ unsigned long  SensorData = 11111; //999.99 ppm #variable
  int TimeStamp = 1210; // 12:10 pm (24 hour format) #variable
- unsigned long Hop = 9999999; // for checking transmission
+ String Hop = abc999; // for checking transmission
 
  Decryption();
  Encryption(SensorData,TimeStamp,Hop);
