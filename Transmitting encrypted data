@@ -78,7 +78,7 @@ void loop(){
 
  unsigned long  SensorData = 11111; //999.99 ppm #variable
  int TimeStamp = 1210; // 12:10 pm (24 hour format) #variable
- String Hop = abc999; // for checking transmission
+ String Hop = "abc999"; // for checking transmission
 
  Decryption();
  Encryption(SensorData,TimeStamp,Hop);
