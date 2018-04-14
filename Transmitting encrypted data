@@ -17,8 +17,7 @@ void Encryption(unsigned long SensorData, int TimeStamp, String Hop)
          aes128_enc_single(key, Trans);  //encrypted
          vw_send((uint8_t *)Trans, strlen(Trans));
          vw_wait_tx(); // Wait until the whole message is gone
-         digitalWrite(13,1);
-         
+         digitalWrite(13,1);  
     };
 
 void Decryption()
